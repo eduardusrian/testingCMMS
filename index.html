@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CMMS - PT Testing</title>
+    <title>CMMS - PT Puratos Indonesia</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <style>
         * {
@@ -167,6 +167,377 @@
                 transform: translateY(0);
             }
         }
+
+        /* ===== AI ASSISTANT FLOATING BUTTON ===== */
+        .ai-float-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            z-index: 9998;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+        }
+        .ai-float-btn .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e53e3e;
+            color: #fff;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* ===== AI CHAT WINDOW ===== */
+        .ai-chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 400px;
+            max-height: 550px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 60px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+        .ai-chat-window.open {
+            display: flex;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .ai-chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ai-chat-header h4 {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-chat-header h4 i {
+            font-size: 18px;
+        }
+        .ai-chat-header .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+        .ai-chat-header .close-btn:hover {
+            opacity: 1;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            max-height: 380px;
+            min-height: 200px;
+            background: #f8fafc;
+        }
+        .ai-chat-messages .message {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            animation: msgIn 0.3s ease;
+        }
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .ai-chat-messages .message.user {
+            flex-direction: row-reverse;
+        }
+        .ai-chat-messages .message .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .ai-chat-messages .message.ai .avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+        .ai-chat-messages .message.user .avatar {
+            background: #1a4b6d;
+            color: #fff;
+        }
+        .ai-chat-messages .message .bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .ai-chat-messages .message.ai .bubble {
+            background: #fff;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            border-top-left-radius: 4px;
+        }
+        .ai-chat-messages .message.user .bubble {
+            background: #1a4b6d;
+            color: #fff;
+            border-top-right-radius: 4px;
+        }
+        .ai-chat-messages .message .bubble .typing {
+            display: inline-block;
+            animation: dots 1.4s infinite;
+        }
+        @keyframes dots {
+            0% {
+                content: '.';
+            }
+            33% {
+                content: '..';
+            }
+            66% {
+                content: '...';
+            }
+        }
+        .ai-chat-messages .empty-chat {
+            text-align: center;
+            color: #94a3b8;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+        .ai-chat-messages .empty-chat i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .ai-chat-input {
+            padding: 12px 16px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            background: #fff;
+        }
+        .ai-chat-input input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .ai-chat-input input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .ai-chat-input button {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .ai-chat-input button:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        .ai-chat-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== SETTINGS PANEL ===== */
+        .ai-settings {
+            padding: 12px 16px;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            flex-wrap: wrap;
+        }
+        .ai-settings select {
+            padding: 4px 10px;
+            border: 1px solid #d1d9e6;
+            border-radius: 6px;
+            font-size: 12px;
+            background: #fff;
+        }
+        .ai-settings .status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #64748b;
+        }
+        .ai-settings .status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .ai-settings .status .dot.online {
+            background: #38a169;
+        }
+        .ai-settings .status .dot.offline {
+            background: #e53e3e;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .hamburger {
+                display: block;
+            }
+            .top-header h1 {
+                font-size: 20px;
+            }
+            .top-header .header-actions .search-box input {
+                width: 140px;
+            }
+        }
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stat-card .stat-number {
+                font-size: 22px;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-header .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-header .header-actions .search-box input {
+                width: 100%;
+            }
+            .filter-tabs .tab-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            .table-footer {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .table-footer .pagination {
+                justify-content: center;
+            }
+            .ai-chat-window {
+                width: calc(100% - 20px);
+                right: 10px;
+                bottom: 90px;
+                max-height: 70vh;
+            }
+            .ai-float-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+        }
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #0b2a4a;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -283,10 +654,6 @@
             background: #d1fae5;
             color: #065f46;
         }
-        .badge-status.close {
-            background: #dbeafe;
-            color: #1e40af;
-        }
         .btn-group {
             display: flex;
             gap: 6px;
@@ -318,13 +685,6 @@
         }
         .btn-success:hover {
             background: #2f855a;
-        }
-        .btn-warning {
-            background: #ed8936;
-            color: #fff;
-        }
-        .btn-warning:hover {
-            background: #dd6b20;
         }
         .btn-danger {
             background: #e53e3e;
@@ -386,78 +746,6 @@
             margin-bottom: 18px;
             flex-wrap: wrap;
         }
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #0b2a4a;
-            cursor: pointer;
-            padding: 4px;
-        }
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-            }
-            .hamburger {
-                display: block;
-            }
-            .top-header h1 {
-                font-size: 20px;
-            }
-            .top-header .header-actions .search-box input {
-                width: 140px;
-            }
-        }
-        @media (max-width: 600px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .stat-card .stat-number {
-                font-size: 22px;
-            }
-            .top-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-header .header-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-header .header-actions .search-box input {
-                width: 100%;
-            }
-            .filter-tabs .tab-btn {
-                font-size: 12px;
-                padding: 6px 12px;
-            }
-            .table-footer {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            .table-footer .pagination {
-                justify-content: center;
-            }
-        }
-        .sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 4px;
-        }
         .welcome-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -495,75 +783,25 @@
             color: #1a4b6d;
             margin: 10px 0;
         }
-        .page-content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        }
-        .page-content h3 {
-            color: #0b2a4a;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .page-content .sub-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .page-content .sub-stat {
-            background: #f8fafc;
-            padding: 12px 16px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .page-content .sub-stat .num {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1a4b6d;
-        }
-        .page-content .sub-stat .label {
-            font-size: 12px;
-            color: #64748b;
-        }
-        .page-content .mini-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .page-content .mini-table th {
-            background: #f8fafc;
-            padding: 10px 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #334155;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .page-content .mini-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #f1f5f9;
-        }
         .toast {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
             background: #1a4b6d;
             color: #fff;
-            padding: 16px 24px;
+            padding: 14px 28px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 9999;
-            transform: translateY(100px);
             opacity: 0;
             transition: all 0.4s ease;
             font-size: 14px;
             max-width: 400px;
+            text-align: center;
         }
         .toast.show {
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
         .toast.success {
@@ -581,37 +819,13 @@
             border-radius: 4px;
             font-size: 12px;
         }
-        .mt-2 {
-            margin-top: 8px;
-        }
-        .mb-2 {
-            margin-bottom: 8px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .gap-2 {
-            gap: 8px;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-muted {
-            color: #94a3b8;
-        }
 
         #modalOverlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.4);
-            z-index: 9999;
+            z-index: 9997;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -638,8 +852,7 @@
             color: #334155;
         }
         .modal-box input,
-        .modal-box select,
-        .modal-box textarea {
+        .modal-box select {
             width: 100%;
             padding: 10px 12px;
             border: 1px solid #d1d9e6;
@@ -670,7 +883,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <h2><i class="fas fa-cogs" style="margin-right:8px;"></i> CMMS <small>PT Testing</small></h2>
+            <h2><i class="fas fa-cogs" style="margin-right:8px;"></i> CMMS <small>PT Puratos Indonesia</small></h2>
             <div class="user-badge"><i class="fas fa-user-circle"></i><span>Admin Administrator</span></div>
         </div>
         <ul class="sidebar-menu">
@@ -725,11 +938,11 @@
                     <div class="welcome-card"><i class="fas fa-boxes"></i><h3>Total Part</h3><div class="count" id="welcomeTotal">0</div><p>Seluruh part terdaftar</p></div>
                     <div class="welcome-card"><i class="fas fa-exclamation-triangle"></i><h3>Perlu Tindakan</h3><div class="count" id="welcomeAction">0</div><p>Overdue + Warning</p></div>
                     <div class="welcome-card"><i class="fas fa-check-circle"></i><h3>Kondisi Baik</h3><div class="count" id="welcomeSafe">0</div><p>Status aman</p></div>
-                    <div class="welcome-card"><i class="fas fa-calendar-check"></i><h3>WO Aktif</h3><div class="count" id="welcomeWO">0</div><p>Perlu diselesaikan</p></div>
+                    <div class="welcome-card"><i class="fas fa-robot"></i><h3>AI Assistant</h3><div class="count" style="font-size:14px;">Siap membantu!</div><p>Tanya apa saja tentang CMMS</p></div>
                 </div>
             </div>
 
-            <!-- INVENTORY -->
+            <!-- INVENTORY (sederhana) -->
             <div class="page" id="page-inventory">
                 <div class="filter-tabs" id="filterTabs">
                     <button class="tab-btn active" data-filter="all"><i class="fas fa-list"></i> Semua</button>
@@ -757,236 +970,78 @@
                 </div>
             </div>
 
-            <!-- PART MASUK -->
-            <div class="page" id="page-part-masuk">
-                <div class="page-content">
-                    <h3><i class="fas fa-arrow-right" style="color:#38a169;"></i> Part Masuk</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="pmTotal">0</div><div class="label">Total Part Masuk</div></div>
-                        <div class="sub-stat"><div class="num" id="pmBulanIni">0</div><div class="label">Bulan Ini</div></div>
-                        <div class="sub-stat"><div class="num" id="pmMingguIni">0</div><div class="label">Minggu Ini</div></div>
-                    </div>
-                    <button class="btn btn-success mb-2" id="btnTambahPartMasuk"><i class="fas fa-plus"></i> Tambah Part Masuk</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Kode Part</th><th>Nama Part</th><th>Jumlah</th><th>Supplier</th><th>Status</th></tr></thead>
-                        <tbody id="partMasukBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PART KELUAR -->
-            <div class="page" id="page-part-keluar">
-                <div class="page-content">
-                    <h3><i class="fas fa-arrow-left" style="color:#ed8936;"></i> Part Keluar</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="pkTotal">0</div><div class="label">Total Part Keluar</div></div>
-                        <div class="sub-stat"><div class="num" id="pkBulanIni">0</div><div class="label">Bulan Ini</div></div>
-                        <div class="sub-stat"><div class="num" id="pkMingguIni">0</div><div class="label">Minggu Ini</div></div>
-                    </div>
-                    <button class="btn btn-warning mb-2" id="btnTambahPartKeluar"><i class="fas fa-plus"></i> Tambah Part Keluar</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Kode Part</th><th>Nama Part</th><th>Jumlah</th><th>PIC</th><th>Keterangan</th></tr></thead>
-                        <tbody id="partKeluarBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- STOK OPNAME -->
-            <div class="page" id="page-stok-opname">
-                <div class="page-content">
-                    <h3><i class="fas fa-clipboard-list" style="color:#1a4b6d;"></i> Stok Opname</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="soTotal">0</div><div class="label">Total Opname</div></div>
-                        <div class="sub-stat"><div class="num" id="soSelisih">0</div><div class="label">Total Selisih</div></div>
-                        <div class="sub-stat"><div class="num" id="soAkurat">0%</div><div class="label">Akurasi</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnMulaiOpname"><i class="fas fa-play"></i> Mulai Opname</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Kode Part</th><th>Nama Part</th><th>Sistem</th><th>Fisik</th><th>Selisih</th><th>Status</th></tr></thead>
-                        <tbody id="stokOpnameBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PENGGANTIAN PART -->
-            <div class="page" id="page-penggantian-part">
-                <div class="page-content">
-                    <h3><i class="fas fa-sync" style="color:#1a4b6d;"></i> Penggantian Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="ppTotal">0</div><div class="label">Total Jadwal</div></div>
-                        <div class="sub-stat"><div class="num" id="ppOverdue">0</div><div class="label">Overdue</div></div>
-                        <div class="sub-stat"><div class="num" id="ppComing">0</div><div class="label">Mendatang</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnTambahJadwalGanti"><i class="fas fa-plus"></i> Tambah Jadwal</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Line</th><th>Mesin</th><th>Kode Part</th><th>Nama Part</th><th>Frekuensi</th><th>Terakhir</th><th>Next Due</th><th>Status</th></tr></thead>
-                        <tbody id="penggantianBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- WO PENGGANTIAN -->
-            <div class="page" id="page-wo-penggantian">
-                <div class="page-content">
-                    <h3><i class="fas fa-tasks" style="color:#38a169;"></i> WO Penggantian Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="woTotal">0</div><div class="label">Total WO</div></div>
-                        <div class="sub-stat"><div class="num" id="woOpen">0</div><div class="label">Open</div></div>
-                        <div class="sub-stat"><div class="num" id="woClose">0</div><div class="label">Close</div></div>
-                    </div>
-                    <button class="btn btn-success mb-2" id="btnBuatWO"><i class="fas fa-plus"></i> Buat WO Baru</button>
-                    <table class="mini-table">
-                        <thead><tr><th>No WO</th><th>Kode Part</th><th>Nama Part</th><th>Tanggal</th><th>PIC</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="woBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- CLEANING PART -->
-            <div class="page" id="page-cleaning-part">
-                <div class="page-content">
-                    <h3><i class="fas fa-broom" style="color:#1a4b6d;"></i> Cleaning Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="clTotal">0</div><div class="label">Total Jadwal</div></div>
-                        <div class="sub-stat"><div class="num" id="clOverdue">0</div><div class="label">Overdue</div></div>
-                        <div class="sub-stat"><div class="num" id="clComing">0</div><div class="label">Mendatang</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnTambahJadwalClean"><i class="fas fa-plus"></i> Tambah Jadwal Cleaning</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Line</th><th>Mesin</th><th>Nama Part</th><th>Bahan Cleaning</th><th>Standar</th><th>Terakhir</th><th>Next Due</th><th>Status</th></tr></thead>
-                        <tbody id="cleaningBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- WO CLEANING -->
-            <div class="page" id="page-wo-cleaning">
-                <div class="page-content">
-                    <h3><i class="fas fa-tasks" style="color:#38a169;"></i> WO Cleaning Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="wcTotal">0</div><div class="label">Total WO</div></div>
-                        <div class="sub-stat"><div class="num" id="wcOpen">0</div><div class="label">Open</div></div>
-                        <div class="sub-stat"><div class="num" id="wcClose">0</div><div class="label">Close</div></div>
-                    </div>
-                    <button class="btn btn-success mb-2" id="btnBuatWOClean"><i class="fas fa-plus"></i> Buat WO Cleaning</button>
-                    <table class="mini-table">
-                        <thead><tr><th>No WO</th><th>Kode Part</th><th>Nama Part</th><th>Tanggal</th><th>PIC</th><th>Status</th></tr></thead>
-                        <tbody id="woCleanBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- LUBRIKASI PART -->
-            <div class="page" id="page-lubrikasi-part">
-                <div class="page-content">
-                    <h3><i class="fas fa-oil-can" style="color:#1a4b6d;"></i> Lubrikasi Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="lubTotal">0</div><div class="label">Total Jadwal</div></div>
-                        <div class="sub-stat"><div class="num" id="lubOverdue">0</div><div class="label">Overdue</div></div>
-                        <div class="sub-stat"><div class="num" id="lubComing">0</div><div class="label">Mendatang</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnTambahJadwalLub"><i class="fas fa-plus"></i> Tambah Jadwal Lubrikasi</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Line</th><th>Mesin</th><th>Nama Part</th><th>Jenis Pelumas</th><th>Frekuensi</th><th>Terakhir</th><th>Next Due</th><th>Status</th></tr></thead>
-                        <tbody id="lubrikasiBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- WO LUBRIKASI -->
-            <div class="page" id="page-wo-lubrikasi">
-                <div class="page-content">
-                    <h3><i class="fas fa-tasks" style="color:#38a169;"></i> WO Lubrikasi Part</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="wlTotal">0</div><div class="label">Total WO</div></div>
-                        <div class="sub-stat"><div class="num" id="wlOpen">0</div><div class="label">Open</div></div>
-                        <div class="sub-stat"><div class="num" id="wlClose">0</div><div class="label">Close</div></div>
-                    </div>
-                    <button class="btn btn-success mb-2" id="btnBuatWOLub"><i class="fas fa-plus"></i> Buat WO Lubrikasi</button>
-                    <table class="mini-table">
-                        <thead><tr><th>No WO</th><th>Kode Part</th><th>Nama Part</th><th>Tanggal</th><th>PIC</th><th>Status</th></tr></thead>
-                        <tbody id="woLubBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PM REPORT -->
-            <div class="page" id="page-pm-report">
-                <div class="page-content">
-                    <h3><i class="fas fa-file-alt" style="color:#1a4b6d;"></i> Preventive Maintenance Report</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="repTotal">0</div><div class="label">Total PM</div></div>
-                        <div class="sub-stat"><div class="num" id="repDone">0</div><div class="label">Selesai</div></div>
-                        <div class="sub-stat"><div class="num" id="repPending">0</div><div class="label">Pending</div></div>
-                    </div>
-                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
-                        <button class="btn btn-primary" id="btnGenerateReport"><i class="fas fa-download"></i> Generate Report</button>
-                        <button class="btn btn-outline" id="btnExportReport"><i class="fas fa-file-pdf"></i> Export PDF</button>
-                    </div>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Jenis PM</th><th>Kode Part</th><th>Nama Part</th><th>PIC</th><th>Status</th></tr></thead>
-                        <tbody id="reportBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- VIBRATION -->
-            <div class="page" id="page-vibration">
-                <div class="page-content">
-                    <h3><i class="fas fa-wave-square" style="color:#1a4b6d;"></i> Vibration Monitoring</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="vibTotal">0</div><div class="label">Total Data</div></div>
-                        <div class="sub-stat"><div class="num" id="vibNormal">0</div><div class="label">Normal</div></div>
-                        <div class="sub-stat"><div class="num" id="vibAlert">0</div><div class="label">Alert</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnTambahVibrasi"><i class="fas fa-plus"></i> Tambah Data</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Mesin</th><th>Nilai (mm/s)</th><th>Frequency (Hz)</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="vibrationBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- TEMPERATURE -->
-            <div class="page" id="page-temperature">
-                <div class="page-content">
-                    <h3><i class="fas fa-thermometer-half" style="color:#1a4b6d;"></i> Temperature Monitoring</h3>
-                    <div class="sub-stats">
-                        <div class="sub-stat"><div class="num" id="tempTotal">0</div><div class="label">Total Data</div></div>
-                        <div class="sub-stat"><div class="num" id="tempNormal">0</div><div class="label">Normal</div></div>
-                        <div class="sub-stat"><div class="num" id="tempAlert">0</div><div class="label">Alert</div></div>
-                    </div>
-                    <button class="btn btn-primary mb-2" id="btnTambahSuhu"><i class="fas fa-plus"></i> Tambah Data</button>
-                    <table class="mini-table">
-                        <thead><tr><th>Tanggal</th><th>Mesin</th><th>Suhu (°C)</th><th>Lokasi</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="temperatureBody"></tbody>
-                    </table>
-                </div>
-            </div>
+            <!-- PAGE LAINNYA (placeholder) -->
+            <div class="page" id="page-part-masuk"><div class="page-content"><h3>Part Masuk</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-part-keluar"><div class="page-content"><h3>Part Keluar</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-stok-opname"><div class="page-content"><h3>Stok Opname</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-penggantian-part"><div class="page-content"><h3>Penggantian Part</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-wo-penggantian"><div class="page-content"><h3>WO Penggantian</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-cleaning-part"><div class="page-content"><h3>Cleaning Part</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-wo-cleaning"><div class="page-content"><h3>WO Cleaning</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-lubrikasi-part"><div class="page-content"><h3>Lubrikasi Part</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-wo-lubrikasi"><div class="page-content"><h3>WO Lubrikasi</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-pm-report"><div class="page-content"><h3>PM Report</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-vibration"><div class="page-content"><h3>Vibration Monitoring</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
+            <div class="page" id="page-temperature"><div class="page-content"><h3>Temperature Monitoring</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
 
         </div>
     </main>
 
-    <!-- MODAL -->
-    <div id="modalOverlay">
-        <div class="modal-box">
-            <h3 id="modalTitle">Tambah Data</h3>
-            <form id="modalForm" onsubmit="return false;">
-                <div id="modalFields"></div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline" id="modalClose">Batal</button>
-                    <button type="button" class="btn btn-primary" id="modalSave"><i class="fas fa-save"></i> Simpan</button>
-                </div>
-            </form>
+    <!-- ===== AI ASSISTANT FLOATING BUTTON ===== -->
+    <button class="ai-float-btn" id="aiFloatBtn" title="AI Assistant">
+        <i class="fas fa-robot"></i>
+        <span class="badge">AI</span>
+    </button>
+
+    <!-- ===== AI CHAT WINDOW ===== -->
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <h4><i class="fas fa-robot"></i> AI Assistant CMMS</h4>
+            <button class="close-btn" id="aiCloseBtn">&times;</button>
+        </div>
+        <div class="ai-settings">
+            <span class="status">
+                <span class="dot online" id="aiStatusDot"></span>
+                <span id="aiStatusText">Online</span>
+            </span>
+            <span style="color:#94a3b8;font-size:11px;">|</span>
+            <span style="color:#94a3b8;font-size:11px;">Model: Gemini 1.5 Flash</span>
+            <span style="color:#94a3b8;font-size:11px;margin-left:auto;">
+                <i class="fas fa-database"></i> <span id="aiDataCount">0</span> data
+            </span>
+        </div>
+        <div class="ai-chat-messages" id="aiMessages">
+            <div class="empty-chat">
+                <i class="fas fa-robot"></i>
+                <p><strong>Halo! Saya AI Assistant CMMS</strong></p>
+                <p style="font-size:13px;margin-top:4px;">Tanyakan tentang data part, status, atau rekomendasi maintenance</p>
+                <p style="font-size:12px;margin-top:8px;color:#b0b8c4;">Contoh: "Part apa yang overdue?" atau "Rekomendasi maintenance bulan ini"</p>
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="aiInput" placeholder="Tanya sesuatu..." />
+            <button id="aiSendBtn"><i class="fas fa-paper-plane"></i> Kirim</button>
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modalOverlay">
+        <div class="modal-box">
+            <h3 id="modalTitle">Tambah Part</h3>
+            <div id="modalFields"></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="modalClose">Batal</button>
+                <button type="button" class="btn btn-primary" id="modalSave"><i class="fas fa-save"></i> Simpan</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ============================================================
-        // DATA MASTER
+        // DATA
         // ============================================================
         let allData = [
             { line: 'Compound Line', mesin: 'HOT WATER 50', namaPartMesin: 'OIL SEAL POMPA HOT WATER 50', kodePart: 'OILS-SC-25-37-8',
@@ -1021,88 +1076,11 @@
                 kodePart: 'CHILLER-001', namaPart: 'TANGKI AIR CHILLER', dueDate: '2025-12-19' },
         ];
 
-        let partMasukData = [
-            { tanggal: '2026-09-01', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ', jumlah: 10, supplier: 'PT Bearing Indo',
-                status: 'Diterima' },
-            { tanggal: '2026-08-28', kodePart: 'OILS-SC-25-37-8', namaPart: 'OIL SEAL SC 25-37-8', jumlah: 5,
-                supplier: 'PT Seal Indonesia', status: 'Diterima' },
-        ];
-
-        let partKeluarData = [
-            { tanggal: '2026-09-02', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ', jumlah: 2, pic: 'Anton',
-                keterangan: 'Penggantian rutin' },
-            { tanggal: '2026-08-30', kodePart: 'OILS-SC-25-37-8', namaPart: 'OIL SEAL SC 25-37-8', jumlah: 1, pic: 'Budi',
-                keterangan: 'Perbaikan mesin' },
-        ];
-
-        let stokOpnameData = [
-            { tanggal: '2026-09-01', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ', sistem: 8, fisik: 8, selisih: 0,
-                status: 'Match' },
-            { tanggal: '2026-08-28', kodePart: 'FBRG-FL004', namaPart: 'FLANGE BEARING FLD', sistem: 8, fisik: 7, selisih: -1,
-                status: 'Discrepancy' },
-        ];
-
-        let penggantianData = [
-            { line: 'Powder Line', mesin: 'DUMPING 750', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ',
-                frekuensi: '9 bulan', terakhir: '2026-01-22', nextDue: '2026-10-22' },
-            { line: 'Wettleline', mesin: 'KUNSHAN MEGA', kodePart: 'BRG-6900-LLU', namaPart: 'BEARING 6900-LLU',
-                frekuensi: '6 bulan', terakhir: '2026-01-29', nextDue: '2026-07-29' },
-        ];
-
         let woData = [
             { no: 'WO-001', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ', tanggal: '2026-09-01', pic: 'Anton',
                 status: 'Open' },
             { no: 'WO-002', kodePart: 'BRG-6900-LLU', namaPart: 'BEARING 6900-LLU', tanggal: '2026-08-28', pic: 'Budi',
                 status: 'Close' },
-        ];
-
-        let cleaningData = [
-            { line: 'Utility', mesin: 'WATER SOFTENER', namaPart: 'FILTER RESIN', bahan: 'AIR, SARINGAN',
-                standar: '12 bulan', terakhir: '2026-04-04', nextDue: '2027-04-04' },
-            { line: 'Utility', mesin: 'AIR COMPRESSOR', namaPart: 'UNLOADER VALVE', bahan: 'KARBURATOR CLEANER',
-                standar: '3 bulan', terakhir: '2026-06-03', nextDue: '2026-09-03' },
-        ];
-
-        let woCleanData = [
-            { no: 'WC-001', kodePart: 'FIL-RESIN-001', namaPart: 'FILTER RESIN', tanggal: '2026-09-01', pic: 'Anton',
-                status: 'Open' },
-            { no: 'WC-002', kodePart: 'UNLOADER-001', namaPart: 'UNLOADER VALVE', tanggal: '2026-08-28', pic: 'Budi',
-                status: 'Close' },
-        ];
-
-        let lubrikasiData = [
-            { line: 'Powder Line', mesin: 'MIXER 1000', namaPart: 'BEARING ENTOLTATOR', pelumas: 'GREASE EP-2',
-                frekuensi: '3 bulan', terakhir: '2026-07-15', nextDue: '2026-10-15' },
-            { line: 'Compound Line', mesin: 'HOT WATER 50', namaPart: 'POMPA HOT WATER', pelumas: 'OIL SAE 30',
-                frekuensi: '6 bulan', terakhir: '2026-04-10', nextDue: '2026-10-10' },
-        ];
-
-        let woLubData = [
-            { no: 'WL-001', kodePart: 'BRG-FC212', namaPart: 'BEARING ENTOLTATOR', tanggal: '2026-09-01', pic: 'Anton',
-                status: 'Open' },
-            { no: 'WL-002', kodePart: 'PUMP-001', namaPart: 'POMPA HOT WATER', tanggal: '2026-08-28', pic: 'Budi',
-                status: 'Close' },
-        ];
-
-        let reportData = [
-            { tanggal: '2026-09-02', jenis: 'Penggantian', kodePart: 'BRG-6306-ZZ', namaPart: 'BEARING 6306-ZZ',
-                pic: 'Anton', status: 'Selesai' },
-            { tanggal: '2026-09-01', jenis: 'Cleaning', kodePart: 'FIL-RESIN-001', namaPart: 'FILTER RESIN', pic: 'Budi',
-                status: 'Selesai' },
-            { tanggal: '2026-08-30', jenis: 'Lubrikasi', kodePart: 'BRG-FC212', namaPart: 'BEARING ENTOLTATOR',
-                pic: 'Anton', status: 'Pending' },
-        ];
-
-        let vibrationData = [
-            { tanggal: '2026-09-02', mesin: 'DUMPING 750', nilai: 2.5, freq: 50, status: 'Normal' },
-            { tanggal: '2026-09-01', mesin: 'MIXER 1000', nilai: 4.2, freq: 60, status: 'Normal' },
-            { tanggal: '2026-08-30', mesin: 'METAL DETECTOR', nilai: 7.8, freq: 45, status: 'Alert' },
-        ];
-
-        let temperatureData = [
-            { tanggal: '2026-09-02', mesin: 'HOT WATER 50', suhu: 72, lokasi: 'Body Pump', status: 'Normal' },
-            { tanggal: '2026-09-01', mesin: 'AIR COMPRESSOR', suhu: 85, lokasi: 'Head', status: 'Normal' },
-            { tanggal: '2026-08-30', mesin: 'CHILLER BALL MILL', suhu: 95, lokasi: 'Compressor', status: 'Alert' },
         ];
 
         // ============================================================
@@ -1199,25 +1177,11 @@
             currentPageId = pageId;
             if (pageId === 'dashboard') updateDashboardStats();
             if (pageId === 'inventory') renderTable();
-
-            renderPartMasuk();
-            renderPartKeluar();
-            renderStokOpname();
-            renderPenggantian();
-            renderWO();
-            renderCleaning();
-            renderWOClean();
-            renderLubrikasi();
-            renderWOLub();
-            renderReport();
-            renderVibration();
-            renderTemperature();
-
             document.getElementById('sidebar').classList.remove('open');
         }
 
         // ============================================================
-        // DASHBOARD STATS
+        // DASHBOARD
         // ============================================================
         function updateDashboardStats() {
             const total = allData.length;
@@ -1233,7 +1197,9 @@
             document.getElementById('welcomeTotal').textContent = total;
             document.getElementById('welcomeAction').textContent = overdue + warning;
             document.getElementById('welcomeSafe').textContent = safe;
-            document.getElementById('welcomeWO').textContent = Math.min(overdue + warning, 10);
+
+            // Update AI data count
+            document.getElementById('aiDataCount').textContent = total;
         }
 
         // ============================================================
@@ -1299,368 +1265,240 @@
             document.getElementById('tableInfo').textContent =
                 `Menampilkan ${filteredData.length > 0 ? start + 1 : 0} - ${Math.min(start + pageSize, filteredData.length)} dari ${filteredData.length} data`;
             document.getElementById('pageIndicator').textContent = currentPage;
+
+            // Update AI data count
+            document.getElementById('aiDataCount').textContent = allData.length;
         }
 
         // ============================================================
-        // RENDER FUNCTIONS (semua modul)
+        // AI ASSISTANT - GEMINI API
         // ============================================================
-        function renderPartMasuk() {
-            const total = partMasukData.length;
-            const bulanIni = partMasukData.filter(d => d.tanggal.startsWith(getToday().slice(0, 7))).length;
-            const mingguIni = partMasukData.filter(d => {
-                const now = new Date();
-                const tgl = new Date(d.tanggal);
-                const startWeek = new Date(now);
-                startWeek.setDate(now.getDate() - now.getDay());
-                return tgl >= startWeek;
-            }).length;
+        // 🔑 GANTI DENGAN API KEY KAMU
+        const GEMINI_API_KEY = 'YOUR_GEMINI_API_KEY_HERE';
+        const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' +
+            GEMINI_API_KEY;
 
-            document.getElementById('pmTotal').textContent = total;
-            document.getElementById('pmBulanIni').textContent = bulanIni;
-            document.getElementById('pmMingguIni').textContent = mingguIni;
+        let aiMessages = [];
+        let isAiLoading = false;
 
-            const tbody = document.getElementById('partMasukBody');
-            if (partMasukData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = partMasukData.map(d =>
-                    `<tr><td>${formatDate(d.tanggal)}</td><td>${d.kodePart}</td><td>${d.namaPart}</td><td>${d.jumlah}</td><td>${d.supplier}</td><td><span class="badge-status safe">${d.status}</span></td></tr>`
-                ).join('');
-            }
+        function getSystemPrompt() {
+            const total = allData.length;
+            const overdue = allData.filter(d => getStatus(d.dueDate) === 'overdue').length;
+            const warning = allData.filter(d => getStatus(d.dueDate) === 'warning').length;
+            const safe = allData.filter(d => getStatus(d.dueDate) === 'safe').length;
+            const woOpen = woData.filter(d => d.status === 'Open').length;
+
+            // Ambil 10 part teratas untuk konteks
+            const topParts = allData.slice(0, 10).map(d =>
+                `- ${d.kodePart}: ${d.namaPart} (${d.mesin}, due: ${d.dueDate}, status: ${getStatus(d.dueDate)})`
+            ).join('\n');
+
+            return `Kamu adalah AI Assistant untuk CMMS (Computerized Maintenance Management System) PT Puratos Indonesia.
+
+DATA CMMS SAAT INI:
+- Total Part: ${total}
+- Overdue: ${overdue}
+- Warning (≤1 bulan): ${warning}
+- Aman (>1 bulan): ${safe}
+- WO Open: ${woOpen}
+
+CONTOH PART (10 data):
+${topParts}
+
+TUGAS:
+1. Jawab pertanyaan user tentang data CMMS
+2. Berikan rekomendasi maintenance
+3. Bantu analisis data part
+4. Jawab dalam bahasa Indonesia
+5. Responsif dan profesional
+
+Aturan:
+- Jika user nanya part overdue, sebutkan part yang overdue
+- Jika user minta rekomendasi, berikan saran maintenance
+- Jika user nanya statistik, berikan data dari atas
+- Jika user nanya hal diluar CMMS, bilang "Saya khusus membantu CMMS PT Puratos Indonesia"`;
         }
 
-        function renderPartKeluar() {
-            const total = partKeluarData.length;
-            const bulanIni = partKeluarData.filter(d => d.tanggal.startsWith(getToday().slice(0, 7))).length;
-            const mingguIni = partKeluarData.filter(d => {
-                const now = new Date();
-                const tgl = new Date(d.tanggal);
-                const startWeek = new Date(now);
-                startWeek.setDate(now.getDate() - now.getDay());
-                return tgl >= startWeek;
-            }).length;
+        function getContextData(query) {
+            // Cari part yang relevan dengan query
+            const q = query.toLowerCase();
+            let relevantParts = allData.filter(d =>
+                d.kodePart.toLowerCase().includes(q) ||
+                d.namaPart.toLowerCase().includes(q) ||
+                d.mesin.toLowerCase().includes(q) ||
+                d.line.toLowerCase().includes(q)
+            );
 
-            document.getElementById('pkTotal').textContent = total;
-            document.getElementById('pkBulanIni').textContent = bulanIni;
-            document.getElementById('pkMingguIni').textContent = mingguIni;
+            if (relevantParts.length > 5) relevantParts = relevantParts.slice(0, 5);
 
-            const tbody = document.getElementById('partKeluarBody');
-            if (partKeluarData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = partKeluarData.map(d =>
-                    `<tr><td>${formatDate(d.tanggal)}</td><td>${d.kodePart}</td><td>${d.namaPart}</td><td>${d.jumlah}</td><td>${d.pic}</td><td>${d.keterangan}</td></tr>`
-                ).join('');
+            let context = '';
+            if (relevantParts.length > 0) {
+                context = '\n\nPART RELEVAN DENGAN PERTANYAAN:\n';
+                relevantParts.forEach(d => {
+                    context +=
+                        `- ${d.kodePart}: ${d.namaPart} | Line: ${d.line} | Mesin: ${d.mesin} | Due: ${d.dueDate} | Status: ${getStatus(d.dueDate)}\n`;
+                });
             }
+
+            // Tambah info WO
+            const woOpenList = woData.filter(w => w.status === 'Open');
+            if (woOpenList.length > 0) {
+                context += `\nWO OPEN: ${woOpenList.length} WO sedang terbuka.\n`;
+                woOpenList.forEach(w => {
+                    context += `- ${w.no}: ${w.namaPart} (PIC: ${w.pic})\n`;
+                });
+            }
+
+            return context;
         }
 
-        function renderStokOpname() {
-            const total = stokOpnameData.length;
-            const selisih = stokOpnameData.reduce((sum, d) => sum + d.selisih, 0);
-            const akurat = stokOpnameData.length > 0 ?
-                Math.round((stokOpnameData.filter(d => d.status === 'Match').length / stokOpnameData.length) * 100) :
-                0;
-
-            document.getElementById('soTotal').textContent = total;
-            document.getElementById('soSelisih').textContent = selisih;
-            document.getElementById('soAkurat').textContent = akurat + '%';
-
-            const tbody = document.getElementById('stokOpnameBody');
-            if (stokOpnameData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = stokOpnameData.map(d =>
-                    `<tr><td>${formatDate(d.tanggal)}</td><td>${d.kodePart}</td><td>${d.namaPart}</td><td>${d.sistem}</td><td>${d.fisik}</td><td>${d.selisih}</td><td><span class="badge-status ${d.status === 'Match' ? 'safe' : 'overdue'}">${d.status}</span></td></tr>`
-                ).join('');
+        async function sendToAI(userMessage) {
+            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_HERE') {
+                return "⚠️ API Key belum diset! Silakan ganti GEMINI_API_KEY di kode dengan API Key dari Google AI Studio (gratis).";
             }
-        }
 
-        function renderPenggantian() {
-            const total = penggantianData.length;
-            const overdue = penggantianData.filter(d => getStatus(d.nextDue) === 'overdue').length;
-            const coming = penggantianData.filter(d => getStatus(d.nextDue) === 'warning' || getStatus(d.nextDue) === 'safe')
-                .length;
+            try {
+                const systemPrompt = getSystemPrompt();
+                const contextData = getContextData(userMessage);
 
-            document.getElementById('ppTotal').textContent = total;
-            document.getElementById('ppOverdue').textContent = overdue;
-            document.getElementById('ppComing').textContent = coming;
+                const fullPrompt = systemPrompt + contextData + `\n\nPERTANYAAN USER: ${userMessage}`;
 
-            const tbody = document.getElementById('penggantianBody');
-            if (penggantianData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = penggantianData.map(d => {
-                    const sts = getStatus(d.nextDue);
-                    return `<tr>
-                                <td>${d.line}</td>
-                                <td>${d.mesin}</td>
-                                <td>${d.kodePart}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${d.frekuensi}</td>
-                                <td>${formatDate(d.terakhir)}</td>
-                                <td>${formatDate(d.nextDue)}</td>
-                                <td>${statusLabel(sts)}</td>
-                            </tr>`;
-                }).join('');
-            }
-        }
+                const response = await fetch(GEMINI_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: fullPrompt }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 500,
+                        }
+                    })
+                });
 
-        function renderWO() {
-            const total = woData.length;
-            const open = woData.filter(d => d.status === 'Open').length;
-            const close = woData.filter(d => d.status === 'Close').length;
+                if (!response.ok) {
+                    const error = await response.json();
+                    console.error('Gemini API Error:', error);
+                    if (response.status === 403) {
+                        return "⚠️ API Key tidak valid atau kuota habis. Silakan cek API Key di Google AI Studio.";
+                    }
+                    return `⚠️ Error: ${error.error?.message || 'Terjadi kesalahan'}`;
+                }
 
-            document.getElementById('woTotal').textContent = total;
-            document.getElementById('woOpen').textContent = open;
-            document.getElementById('woClose').textContent = close;
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak bisa memproses permintaan Anda.';
 
-            const tbody = document.getElementById('woBody');
-            if (woData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = woData.map(d =>
-                    `<tr>
-                                <td><strong>${d.no}</strong></td>
-                                <td>${d.kodePart}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.pic}</td>
-                                <td><span class="badge-status ${d.status === 'Open' ? 'warning' : 'safe'}">${d.status}</span></td>
-                                <td><button class="btn btn-sm btn-${d.status === 'Open' ? 'success' : 'outline'}" onclick="toggleWO('${d.no}')">${d.status === 'Open' ? 'Close' : 'Reopen'}</button></td>
-                            </tr>`
-                ).join('');
-            }
-        }
+                return text;
 
-        function toggleWO(no) {
-            const item = woData.find(d => d.no === no);
-            if (item) {
-                item.status = item.status === 'Open' ? 'Close' : 'Open';
-                showToast(`WO ${no} ${item.status === 'Open' ? 'dibuka' : 'ditutup'}`, 'success');
-                renderWO();
-            }
-        }
-
-        function renderCleaning() {
-            const total = cleaningData.length;
-            const overdue = cleaningData.filter(d => getStatus(d.nextDue) === 'overdue').length;
-            const coming = cleaningData.filter(d => getStatus(d.nextDue) === 'warning' || getStatus(d.nextDue) === 'safe')
-                .length;
-
-            document.getElementById('clTotal').textContent = total;
-            document.getElementById('clOverdue').textContent = overdue;
-            document.getElementById('clComing').textContent = coming;
-
-            const tbody = document.getElementById('cleaningBody');
-            if (cleaningData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = cleaningData.map(d => {
-                    const sts = getStatus(d.nextDue);
-                    return `<tr>
-                                <td>${d.line}</td>
-                                <td>${d.mesin}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${d.bahan}</td>
-                                <td>${d.standar}</td>
-                                <td>${formatDate(d.terakhir)}</td>
-                                <td>${formatDate(d.nextDue)}</td>
-                                <td>${statusLabel(sts)}</td>
-                            </tr>`;
-                }).join('');
-            }
-        }
-
-        function renderWOClean() {
-            const total = woCleanData.length;
-            const open = woCleanData.filter(d => d.status === 'Open').length;
-            const close = woCleanData.filter(d => d.status === 'Close').length;
-
-            document.getElementById('wcTotal').textContent = total;
-            document.getElementById('wcOpen').textContent = open;
-            document.getElementById('wcClose').textContent = close;
-
-            const tbody = document.getElementById('woCleanBody');
-            if (woCleanData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = woCleanData.map(d =>
-                    `<tr>
-                                <td><strong>${d.no}</strong></td>
-                                <td>${d.kodePart}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.pic}</td>
-                                <td><span class="badge-status ${d.status === 'Open' ? 'warning' : 'safe'}">${d.status}</span></td>
-                            </tr>`
-                ).join('');
-            }
-        }
-
-        function renderLubrikasi() {
-            const total = lubrikasiData.length;
-            const overdue = lubrikasiData.filter(d => getStatus(d.nextDue) === 'overdue').length;
-            const coming = lubrikasiData.filter(d => getStatus(d.nextDue) === 'warning' || getStatus(d.nextDue) === 'safe')
-                .length;
-
-            document.getElementById('lubTotal').textContent = total;
-            document.getElementById('lubOverdue').textContent = overdue;
-            document.getElementById('lubComing').textContent = coming;
-
-            const tbody = document.getElementById('lubrikasiBody');
-            if (lubrikasiData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = lubrikasiData.map(d => {
-                    const sts = getStatus(d.nextDue);
-                    return `<tr>
-                                <td>${d.line}</td>
-                                <td>${d.mesin}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${d.pelumas}</td>
-                                <td>${d.frekuensi}</td>
-                                <td>${formatDate(d.terakhir)}</td>
-                                <td>${formatDate(d.nextDue)}</td>
-                                <td>${statusLabel(sts)}</td>
-                            </tr>`;
-                }).join('');
-            }
-        }
-
-        function renderWOLub() {
-            const total = woLubData.length;
-            const open = woLubData.filter(d => d.status === 'Open').length;
-            const close = woLubData.filter(d => d.status === 'Close').length;
-
-            document.getElementById('wlTotal').textContent = total;
-            document.getElementById('wlOpen').textContent = open;
-            document.getElementById('wlClose').textContent = close;
-
-            const tbody = document.getElementById('woLubBody');
-            if (woLubData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = woLubData.map(d =>
-                    `<tr>
-                                <td><strong>${d.no}</strong></td>
-                                <td>${d.kodePart}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.pic}</td>
-                                <td><span class="badge-status ${d.status === 'Open' ? 'warning' : 'safe'}">${d.status}</span></td>
-                            </tr>`
-                ).join('');
-            }
-        }
-
-        function renderReport() {
-            const total = reportData.length;
-            const done = reportData.filter(d => d.status === 'Selesai').length;
-            const pending = reportData.filter(d => d.status === 'Pending').length;
-
-            document.getElementById('repTotal').textContent = total;
-            document.getElementById('repDone').textContent = done;
-            document.getElementById('repPending').textContent = pending;
-
-            const tbody = document.getElementById('reportBody');
-            if (reportData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = reportData.map(d =>
-                    `<tr>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.jenis}</td>
-                                <td>${d.kodePart}</td>
-                                <td>${d.namaPart}</td>
-                                <td>${d.pic}</td>
-                                <td><span class="badge-status ${d.status === 'Selesai' ? 'safe' : 'warning'}">${d.status}</span></td>
-                            </tr>`
-                ).join('');
-            }
-        }
-
-        function renderVibration() {
-            const total = vibrationData.length;
-            const normal = vibrationData.filter(d => d.status === 'Normal').length;
-            const alert = vibrationData.filter(d => d.status === 'Alert').length;
-
-            document.getElementById('vibTotal').textContent = total;
-            document.getElementById('vibNormal').textContent = normal;
-            document.getElementById('vibAlert').textContent = alert;
-
-            const tbody = document.getElementById('vibrationBody');
-            if (vibrationData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = vibrationData.map((d, i) =>
-                    `<tr>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.mesin}</td>
-                                <td>${d.nilai}</td>
-                                <td>${d.freq}</td>
-                                <td><span class="badge-status ${d.status === 'Normal' ? 'safe' : 'overdue'}">${d.status}</span></td>
-                                <td><button class="btn btn-danger btn-sm" onclick="hapusVibrasi(${i})"><i class="fas fa-trash"></i></button></td>
-                            </tr>`
-                ).join('');
-            }
-        }
-
-        function hapusVibrasi(index) {
-            if (confirm('Hapus data vibration?')) {
-                vibrationData.splice(index, 1);
-                renderVibration();
-                showToast('Data vibration dihapus', 'warning');
-            }
-        }
-
-        function renderTemperature() {
-            const total = temperatureData.length;
-            const normal = temperatureData.filter(d => d.status === 'Normal').length;
-            const alert = temperatureData.filter(d => d.status === 'Alert').length;
-
-            document.getElementById('tempTotal').textContent = total;
-            document.getElementById('tempNormal').textContent = normal;
-            document.getElementById('tempAlert').textContent = alert;
-
-            const tbody = document.getElementById('temperatureBody');
-            if (temperatureData.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">Belum ada data</td></tr>`;
-            } else {
-                tbody.innerHTML = temperatureData.map((d, i) =>
-                    `<tr>
-                                <td>${formatDate(d.tanggal)}</td>
-                                <td>${d.mesin}</td>
-                                <td>${d.suhu}</td>
-                                <td>${d.lokasi}</td>
-                                <td><span class="badge-status ${d.status === 'Normal' ? 'safe' : 'overdue'}">${d.status}</span></td>
-                                <td><button class="btn btn-danger btn-sm" onclick="hapusSuhu(${i})"><i class="fas fa-trash"></i></button></td>
-                            </tr>`
-                ).join('');
-            }
-        }
-
-        function hapusSuhu(index) {
-            if (confirm('Hapus data temperature?')) {
-                temperatureData.splice(index, 1);
-                renderTemperature();
-                showToast('Data temperature dihapus', 'warning');
+            } catch (error) {
+                console.error('AI Error:', error);
+                return `⚠️ Error koneksi: ${error.message}. Periksa koneksi internet Anda.`;
             }
         }
 
         // ============================================================
-        // MODAL HANDLER - PAKE BUTTON CLICK BUKAN SUBMIT
+        // AI UI
+        // ============================================================
+        function addMessage(text, sender = 'ai') {
+            const container = document.getElementById('aiMessages');
+            // Remove empty state
+            const empty = container.querySelector('.empty-chat');
+            if (empty) empty.remove();
+
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            const avatar = sender === 'ai' ? '🤖' : '👤';
+            div.innerHTML = `
+                <div class="avatar">${avatar}</div>
+                <div class="bubble">${text}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+
+            // Simpan history
+            aiMessages.push({ sender, text });
+        }
+
+        function addTypingIndicator() {
+            const container = document.getElementById('aiMessages');
+            const div = document.createElement('div');
+            div.className = 'message ai';
+            div.id = 'typingIndicator';
+            div.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="bubble"><span class="typing">● ● ●</span></div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const el = document.getElementById('typingIndicator');
+            if (el) el.remove();
+        }
+
+        async function handleAIQuery() {
+            const input = document.getElementById('aiInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            // Disable input
+            input.disabled = true;
+            document.getElementById('aiSendBtn').disabled = true;
+
+            // Add user message
+            addMessage(query, 'user');
+            input.value = '';
+
+            // Show typing
+            addTypingIndicator();
+
+            // Send to AI
+            const response = await sendToAI(query);
+
+            // Remove typing
+            removeTypingIndicator();
+
+            // Add AI response
+            const formattedResponse = response.replace(/\n/g, '<br>');
+            addMessage(formattedResponse, 'ai');
+
+            // Enable input
+            input.disabled = false;
+            document.getElementById('aiSendBtn').disabled = false;
+            input.focus();
+        }
+
+        // ============================================================
+        // AI EVENT LISTENERS
+        // ============================================================
+        document.getElementById('aiFloatBtn').addEventListener('click', function() {
+            const window = document.getElementById('aiChatWindow');
+            window.classList.toggle('open');
+            if (window.classList.contains('open')) {
+                document.getElementById('aiInput').focus();
+                // Update status
+                document.getElementById('aiStatusText').textContent = 'Online';
+                document.getElementById('aiStatusDot').className = 'dot online';
+            }
+        });
+
+        document.getElementById('aiCloseBtn').addEventListener('click', function() {
+            document.getElementById('aiChatWindow').classList.remove('open');
+        });
+
+        document.getElementById('aiSendBtn').addEventListener('click', handleAIQuery);
+
+        document.getElementById('aiInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAIQuery();
+            }
+        });
+
+        // ============================================================
+        // MODAL
         // ============================================================
         function openModal(context) {
             modalContext = context;
@@ -1671,312 +1509,32 @@
             document.getElementById('modalOverlay').style.display = 'none';
         }
 
-        // Semua tombol modal pake event listener ID
         document.getElementById('modalClose').addEventListener('click', closeModal);
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
         // ============================================================
-        // TOMBOL TAMBAH DATA (semua modul)
+        // INVENTORY CRUD
         // ============================================================
-        document.getElementById('btnTambahPartMasuk').addEventListener('click', function() {
-            modalContext = 'part-masuk';
-            document.getElementById('modalTitle').textContent = 'Tambah Part Masuk';
+        document.getElementById('btnAddPart').addEventListener('click', function() {
+            modalContext = 'inventory-add';
+            editingKode = null;
+            document.getElementById('modalTitle').textContent = '➕ Tambah Part Baru';
             document.getElementById('modalFields').innerHTML = `
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>Kode Part</label>
-                <select id="fKodePartSelect">
-                    ${allData.map(d => `<option value="${d.kodePart}">${d.kodePart} - ${d.namaPart}</option>`).join('')}
-                </select>
-                <label>Jumlah</label><input type="number" id="fJumlah" value="1" min="1" />
-                <label>Supplier</label><input type="text" id="fSupplier" placeholder="PT Supplier Indonesia" />
+                <label>Kode Part *</label><input type="text" id="fKodePart" placeholder="BRG-6306-ZZ" />
+                <label>Nama Part *</label><input type="text" id="fNamaPart" placeholder="BEARING 6306-ZZ" />
+                <div class="form-row">
+                    <div><label>Line</label><input type="text" id="fLine" placeholder="Powder Line" /></div>
+                    <div><label>Mesin</label><input type="text" id="fMesin" placeholder="DUMPING 750" /></div>
+                </div>
+                <label>Due Date *</label><input type="date" id="fDueDate" />
             `;
-            openModal('part-masuk');
+            openModal('inventory-add');
         });
 
-        document.getElementById('btnTambahPartKeluar').addEventListener('click', function() {
-            modalContext = 'part-keluar';
-            document.getElementById('modalTitle').textContent = 'Tambah Part Keluar';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>Kode Part</label>
-                <select id="fKodePartSelect">
-                    ${allData.map(d => `<option value="${d.kodePart}">${d.kodePart} - ${d.namaPart}</option>`).join('')}
-                </select>
-                <label>Jumlah</label><input type="number" id="fJumlah" value="1" min="1" />
-                <label>PIC</label><input type="text" id="fPIC" placeholder="Nama PIC" />
-                <label>Keterangan</label><input type="text" id="fKeterangan" placeholder="Keterangan" />
-            `;
-            openModal('part-keluar');
-        });
-
-        document.getElementById('btnMulaiOpname').addEventListener('click', function() {
-            modalContext = 'stok-opname';
-            document.getElementById('modalTitle').textContent = 'Mulai Opname';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>Kode Part</label>
-                <select id="fKodePartSelect">
-                    ${allData.map(d => `<option value="${d.kodePart}">${d.kodePart} - ${d.namaPart}</option>`).join('')}
-                </select>
-                <label>Jumlah Sistem</label><input type="number" id="fSistem" value="0" />
-                <label>Jumlah Fisik</label><input type="number" id="fFisik" value="0" />
-            `;
-            openModal('stok-opname');
-        });
-
-        document.getElementById('btnTambahJadwalGanti').addEventListener('click', function() {
-            modalContext = 'penggantian';
-            document.getElementById('modalTitle').textContent = 'Tambah Jadwal Penggantian Part';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Line</label><input type="text" id="fLine" placeholder="Powder Line" />
-                <label>Mesin</label><input type="text" id="fMesin" placeholder="DUMPING 750" />
-                <label>Kode Part</label>
-                <select id="fKodePartSelect">
-                    ${allData.map(d => `<option value="${d.kodePart}">${d.kodePart} - ${d.namaPart}</option>`).join('')}
-                </select>
-                <label>Frekuensi</label><input type="text" id="fFrekuensi" placeholder="6 bulan" />
-                <label>Terakhir Ganti</label><input type="date" id="fTerakhir" />
-                <label>Next Due</label><input type="date" id="fNextDue" />
-            `;
-            openModal('penggantian');
-        });
-
-        document.getElementById('btnBuatWO').addEventListener('click', function() {
-            modalContext = 'wo';
-            document.getElementById('modalTitle').textContent = 'Buat WO Baru';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Kode Part</label>
-                <select id="fKodePartSelect">
-                    ${allData.map(d => `<option value="${d.kodePart}">${d.kodePart} - ${d.namaPart}</option>`).join('')}
-                </select>
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>PIC</label><input type="text" id="fPIC" placeholder="Nama PIC" />
-            `;
-            openModal('wo');
-        });
-
-        document.getElementById('btnTambahJadwalClean').addEventListener('click', function() {
-            modalContext = 'cleaning';
-            document.getElementById('modalTitle').textContent = 'Tambah Jadwal Cleaning';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Line</label><input type="text" id="fLine" placeholder="Utility" />
-                <label>Mesin</label><input type="text" id="fMesin" placeholder="WATER SOFTENER" />
-                <label>Nama Part</label><input type="text" id="fNamaPart" placeholder="FILTER RESIN" />
-                <label>Bahan Cleaning</label><input type="text" id="fBahan" placeholder="AIR, SARINGAN" />
-                <label>Standar</label><input type="text" id="fStandar" placeholder="12 bulan" />
-                <label>Terakhir</label><input type="date" id="fTerakhir" />
-                <label>Next Due</label><input type="date" id="fNextDue" />
-            `;
-            openModal('cleaning');
-        });
-
-        document.getElementById('btnBuatWOClean').addEventListener('click', function() {
-            modalContext = 'wo-clean';
-            document.getElementById('modalTitle').textContent = 'Buat WO Cleaning';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Nama Part</label><input type="text" id="fNamaPart" placeholder="FILTER RESIN" />
-                <label>Kode Part</label><input type="text" id="fKodePart" placeholder="FIL-RESIN-001" />
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>PIC</label><input type="text" id="fPIC" placeholder="Nama PIC" />
-            `;
-            openModal('wo-clean');
-        });
-
-        document.getElementById('btnTambahJadwalLub').addEventListener('click', function() {
-            modalContext = 'lubrikasi';
-            document.getElementById('modalTitle').textContent = 'Tambah Jadwal Lubrikasi';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Line</label><input type="text" id="fLine" placeholder="Powder Line" />
-                <label>Mesin</label><input type="text" id="fMesin" placeholder="MIXER 1000" />
-                <label>Nama Part</label><input type="text" id="fNamaPart" placeholder="BEARING ENTOLTATOR" />
-                <label>Jenis Pelumas</label><input type="text" id="fPelumas" placeholder="GREASE EP-2" />
-                <label>Frekuensi</label><input type="text" id="fFrekuensi" placeholder="3 bulan" />
-                <label>Terakhir</label><input type="date" id="fTerakhir" />
-                <label>Next Due</label><input type="date" id="fNextDue" />
-            `;
-            openModal('lubrikasi');
-        });
-
-        document.getElementById('btnBuatWOLub').addEventListener('click', function() {
-            modalContext = 'wo-lub';
-            document.getElementById('modalTitle').textContent = 'Buat WO Lubrikasi';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Nama Part</label><input type="text" id="fNamaPart" placeholder="BEARING ENTOLTATOR" />
-                <label>Kode Part</label><input type="text" id="fKodePart" placeholder="BRG-FC212" />
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>PIC</label><input type="text" id="fPIC" placeholder="Nama PIC" />
-            `;
-            openModal('wo-lub');
-        });
-
-        document.getElementById('btnTambahVibrasi').addEventListener('click', function() {
-            modalContext = 'vibration';
-            document.getElementById('modalTitle').textContent = 'Tambah Data Vibration';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>Mesin</label><input type="text" id="fMesin" placeholder="DUMPING 750" />
-                <label>Nilai (mm/s)</label><input type="number" id="fNilai" step="0.1" value="2.5" />
-                <label>Frequency (Hz)</label><input type="number" id="fFreq" value="50" />
-                <label>Status</label>
-                <select id="fStatus">
-                    <option value="Normal">Normal</option>
-                    <option value="Alert">Alert</option>
-                </select>
-            `;
-            openModal('vibration');
-        });
-
-        document.getElementById('btnTambahSuhu').addEventListener('click', function() {
-            modalContext = 'temperature';
-            document.getElementById('modalTitle').textContent = 'Tambah Data Temperature';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Tanggal</label><input type="date" id="fTanggal" value="${getToday()}" />
-                <label>Mesin</label><input type="text" id="fMesin" placeholder="HOT WATER 50" />
-                <label>Suhu (°C)</label><input type="number" id="fSuhu" value="72" />
-                <label>Lokasi</label><input type="text" id="fLokasi" placeholder="Body Pump" />
-                <label>Status</label>
-                <select id="fStatus">
-                    <option value="Normal">Normal</option>
-                    <option value="Alert">Alert</option>
-                </select>
-            `;
-            openModal('temperature');
-        });
-
-        // ============================================================
-        // MODAL SAVE - PAKE CLICK BUKAN SUBMIT
-        // ============================================================
         document.getElementById('modalSave').addEventListener('click', function() {
-            const context = modalContext;
-
-            if (context === 'part-masuk') {
-                const kodePart = document.getElementById('fKodePartSelect').value;
-                const part = allData.find(d => d.kodePart === kodePart);
-                partMasukData.push({
-                    tanggal: document.getElementById('fTanggal').value,
-                    kodePart: kodePart,
-                    namaPart: part ? part.namaPart : 'Unknown',
-                    jumlah: parseInt(document.getElementById('fJumlah').value),
-                    supplier: document.getElementById('fSupplier').value || 'PT Supplier',
-                    status: 'Diterima'
-                });
-                showToast('✅ Part masuk berhasil ditambahkan!', 'success');
-            } else if (context === 'part-keluar') {
-                const kodePart = document.getElementById('fKodePartSelect').value;
-                const part = allData.find(d => d.kodePart === kodePart);
-                partKeluarData.push({
-                    tanggal: document.getElementById('fTanggal').value,
-                    kodePart: kodePart,
-                    namaPart: part ? part.namaPart : 'Unknown',
-                    jumlah: parseInt(document.getElementById('fJumlah').value),
-                    pic: document.getElementById('fPIC').value || 'Admin',
-                    keterangan: document.getElementById('fKeterangan').value || '-'
-                });
-                showToast('✅ Part keluar berhasil ditambahkan!', 'success');
-            } else if (context === 'stok-opname') {
-                const kodePart = document.getElementById('fKodePartSelect').value;
-                const part = allData.find(d => d.kodePart === kodePart);
-                const sistem = parseInt(document.getElementById('fSistem').value) || 0;
-                const fisik = parseInt(document.getElementById('fFisik').value) || 0;
-                const selisih = fisik - sistem;
-                stokOpnameData.push({
-                    tanggal: document.getElementById('fTanggal').value,
-                    kodePart: kodePart,
-                    namaPart: part ? part.namaPart : 'Unknown',
-                    sistem: sistem,
-                    fisik: fisik,
-                    selisih: selisih,
-                    status: selisih === 0 ? 'Match' : 'Discrepancy'
-                });
-                showToast('✅ Opname berhasil!', 'success');
-            } else if (context === 'penggantian') {
-                const kodePart = document.getElementById('fKodePartSelect').value;
-                const part = allData.find(d => d.kodePart === kodePart);
-                penggantianData.push({
-                    line: document.getElementById('fLine').value || 'Unknown',
-                    mesin: document.getElementById('fMesin').value || 'Unknown',
-                    kodePart: kodePart,
-                    namaPart: part ? part.namaPart : 'Unknown',
-                    frekuensi: document.getElementById('fFrekuensi').value || '6 bulan',
-                    terakhir: document.getElementById('fTerakhir').value || getToday(),
-                    nextDue: document.getElementById('fNextDue').value || getToday()
-                });
-                showToast('✅ Jadwal penggantian ditambahkan!', 'success');
-            } else if (context === 'wo') {
-                const kodePart = document.getElementById('fKodePartSelect').value;
-                const part = allData.find(d => d.kodePart === kodePart);
-                woData.push({
-                    no: generateId('WO'),
-                    kodePart: kodePart,
-                    namaPart: part ? part.namaPart : 'Unknown',
-                    tanggal: document.getElementById('fTanggal').value || getToday(),
-                    pic: document.getElementById('fPIC').value || 'Admin',
-                    status: 'Open'
-                });
-                showToast('✅ WO baru berhasil dibuat!', 'success');
-            } else if (context === 'cleaning') {
-                cleaningData.push({
-                    line: document.getElementById('fLine').value || 'Unknown',
-                    mesin: document.getElementById('fMesin').value || 'Unknown',
-                    namaPart: document.getElementById('fNamaPart').value || 'Unknown',
-                    bahan: document.getElementById('fBahan').value || '-',
-                    standar: document.getElementById('fStandar').value || '6 bulan',
-                    terakhir: document.getElementById('fTerakhir').value || getToday(),
-                    nextDue: document.getElementById('fNextDue').value || getToday()
-                });
-                showToast('✅ Jadwal cleaning ditambahkan!', 'success');
-            } else if (context === 'wo-clean') {
-                woCleanData.push({
-                    no: generateId('WC'),
-                    kodePart: document.getElementById('fKodePart').value || 'N/A',
-                    namaPart: document.getElementById('fNamaPart').value || 'Unknown',
-                    tanggal: document.getElementById('fTanggal').value || getToday(),
-                    pic: document.getElementById('fPIC').value || 'Admin',
-                    status: 'Open'
-                });
-                showToast('✅ WO Cleaning berhasil dibuat!', 'success');
-            } else if (context === 'lubrikasi') {
-                lubrikasiData.push({
-                    line: document.getElementById('fLine').value || 'Unknown',
-                    mesin: document.getElementById('fMesin').value || 'Unknown',
-                    namaPart: document.getElementById('fNamaPart').value || 'Unknown',
-                    pelumas: document.getElementById('fPelumas').value || '-',
-                    frekuensi: document.getElementById('fFrekuensi').value || '3 bulan',
-                    terakhir: document.getElementById('fTerakhir').value || getToday(),
-                    nextDue: document.getElementById('fNextDue').value || getToday()
-                });
-                showToast('✅ Jadwal lubrikasi ditambahkan!', 'success');
-            } else if (context === 'wo-lub') {
-                woLubData.push({
-                    no: generateId('WL'),
-                    kodePart: document.getElementById('fKodePart').value || 'N/A',
-                    namaPart: document.getElementById('fNamaPart').value || 'Unknown',
-                    tanggal: document.getElementById('fTanggal').value || getToday(),
-                    pic: document.getElementById('fPIC').value || 'Admin',
-                    status: 'Open'
-                });
-                showToast('✅ WO Lubrikasi berhasil dibuat!', 'success');
-            } else if (context === 'vibration') {
-                vibrationData.push({
-                    tanggal: document.getElementById('fTanggal').value || getToday(),
-                    mesin: document.getElementById('fMesin').value || 'Unknown',
-                    nilai: parseFloat(document.getElementById('fNilai').value) || 0,
-                    freq: parseInt(document.getElementById('fFreq').value) || 0,
-                    status: document.getElementById('fStatus').value || 'Normal'
-                });
-                showToast('✅ Data vibration ditambahkan!', 'success');
-            } else if (context === 'temperature') {
-                temperatureData.push({
-                    tanggal: document.getElementById('fTanggal').value || getToday(),
-                    mesin: document.getElementById('fMesin').value || 'Unknown',
-                    suhu: parseInt(document.getElementById('fSuhu').value) || 0,
-                    lokasi: document.getElementById('fLokasi').value || '-',
-                    status: document.getElementById('fStatus').value || 'Normal'
-                });
-                showToast('✅ Data temperature ditambahkan!', 'success');
-            } else if (context === 'inventory-add' || context === 'inventory-edit') {
+            if (modalContext === 'inventory-add' || modalContext === 'inventory-edit') {
                 const kode = document.getElementById('fKodePart').value.trim();
                 const nama = document.getElementById('fNamaPart').value.trim();
                 const line = document.getElementById('fLine').value.trim();
@@ -1988,7 +1546,7 @@
                     return;
                 }
 
-                if (context === 'inventory-add') {
+                if (modalContext === 'inventory-add') {
                     if (allData.some(d => d.kodePart === kode)) {
                         showToast(`⚠️ Kode "${kode}" sudah ada!`, 'error');
                         return;
@@ -2007,44 +1565,7 @@
                 updateDashboardStats();
                 navigateTo('inventory');
                 return;
-            } else {
-                showToast('⚠️ Unknown context', 'error');
-                return;
             }
-
-            closeModal();
-            renderPartMasuk();
-            renderPartKeluar();
-            renderStokOpname();
-            renderPenggantian();
-            renderWO();
-            renderCleaning();
-            renderWOClean();
-            renderLubrikasi();
-            renderWOLub();
-            renderReport();
-            renderVibration();
-            renderTemperature();
-            updateDashboardStats();
-        });
-
-        // ============================================================
-        // INVENTORY CRUD
-        // ============================================================
-        document.getElementById('btnAddPart').addEventListener('click', function() {
-            modalContext = 'inventory-add';
-            editingKode = null;
-            document.getElementById('modalTitle').textContent = '➕ Tambah Part Baru';
-            document.getElementById('modalFields').innerHTML = `
-                <label>Kode Part *</label><input type="text" id="fKodePart" placeholder="BRG-6306-ZZ" required />
-                <label>Nama Part *</label><input type="text" id="fNamaPart" placeholder="BEARING 6306-ZZ" required />
-                <div class="form-row">
-                    <div><label>Line</label><input type="text" id="fLine" placeholder="Powder Line" /></div>
-                    <div><label>Mesin</label><input type="text" id="fMesin" placeholder="DUMPING 750" /></div>
-                </div>
-                <label>Due Date *</label><input type="date" id="fDueDate" required />
-            `;
-            openModal('inventory-add');
         });
 
         document.getElementById('tableBody').addEventListener('click', function(e) {
@@ -2061,12 +1582,12 @@
                 document.getElementById('modalTitle').textContent = '✏️ Edit Part';
                 document.getElementById('modalFields').innerHTML = `
                     <label>Kode Part</label><input type="text" id="fKodePart" value="${item.kodePart}" disabled />
-                    <label>Nama Part *</label><input type="text" id="fNamaPart" value="${item.namaPart}" required />
+                    <label>Nama Part *</label><input type="text" id="fNamaPart" value="${item.namaPart}" />
                     <div class="form-row">
                         <div><label>Line</label><input type="text" id="fLine" value="${item.line || ''}" /></div>
                         <div><label>Mesin</label><input type="text" id="fMesin" value="${item.mesin || ''}" /></div>
                     </div>
-                    <label>Due Date *</label><input type="date" id="fDueDate" value="${item.dueDate}" required />
+                    <label>Due Date *</label><input type="date" id="fDueDate" value="${item.dueDate}" />
                 `;
                 openModal('inventory-edit');
                 return;
@@ -2096,7 +1617,6 @@
                             status: 'Open'
                         });
                         showToast(`🔧 WO untuk ${item.kodePart} berhasil digenerate!`, 'success');
-                        renderWO();
                     } else {
                         showToast(`✅ ${item.kodePart} masih aman`, 'warning');
                     }
@@ -2133,7 +1653,7 @@
         });
 
         // ============================================================
-        // GENERATE ALL WO
+        // GENERATE WO
         // ============================================================
         document.getElementById('btnGenerateWO').addEventListener('click', function() {
             const items = allData.filter(d => getStatus(d.dueDate) === 'overdue' || getStatus(d.dueDate) === 'warning');
@@ -2156,21 +1676,6 @@
                 }
             });
             showToast(`🔧 ${count} WO berhasil digenerate!`, 'success');
-            renderWO();
-        });
-
-        // ============================================================
-        // REPORT
-        // ============================================================
-        document.getElementById('btnGenerateReport').addEventListener('click', function() {
-            const total = reportData.length;
-            const done = reportData.filter(d => d.status === 'Selesai').length;
-            const pending = reportData.filter(d => d.status === 'Pending').length;
-            showToast(`📊 Report: Total ${total} PM, ${done} Selesai, ${pending} Pending`, 'success');
-        });
-
-        document.getElementById('btnExportReport').addEventListener('click', function() {
-            showToast('📄 Report PDF berhasil diexport!', 'success');
         });
 
         // ============================================================
@@ -2179,19 +1684,7 @@
         document.getElementById('btnRefresh').addEventListener('click', function() {
             renderTable();
             updateDashboardStats();
-            renderPartMasuk();
-            renderPartKeluar();
-            renderStokOpname();
-            renderPenggantian();
-            renderWO();
-            renderCleaning();
-            renderWOClean();
-            renderLubrikasi();
-            renderWOLub();
-            renderReport();
-            renderVibration();
-            renderTemperature();
-            showToast('🔄 Semua data direfresh!', 'success');
+            showToast('🔄 Data direfresh!', 'success');
         });
 
         // ============================================================
@@ -2261,9 +1754,12 @@
         // INIT
         // ============================================================
         navigateTo('dashboard');
-        console.log('🚀 CMMS PT Testing - READY FOR DEMO!');
+        console.log('🚀 CMMS dengan AI Assistant siap!');
         console.log(`📦 Total part: ${allData.length}`);
-        console.log('✅ Semua fitur berfungsi 100% - Tidak ada "segera hadir"!');
+        console.log('🤖 AI Assistant: Gemini 1.5 Flash');
+        if (GEMINI_API_KEY === 'AQ.Ab8RN6JZ7aL8q37yjdgv5nrS1KrhVqtz5JKSUuSnUZh2cpkTSg') {
+            console.warn('⚠️ Ganti GEMINI_API_KEY dengan API Key dari Google AI Studio!');
+        }
     </script>
 
 </body>
