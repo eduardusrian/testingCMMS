@@ -424,13 +424,6 @@
             font-size: 12px;
             flex-wrap: wrap;
         }
-        .ai-settings select {
-            padding: 4px 10px;
-            border: 1px solid #d1d9e6;
-            border-radius: 6px;
-            font-size: 12px;
-            background: #fff;
-        }
         .ai-settings .status {
             display: flex;
             align-items: center;
@@ -819,6 +812,19 @@
             border-radius: 4px;
             font-size: 12px;
         }
+        .page-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        .page-content h3 {
+            color: #0b2a4a;
+            margin-bottom: 16px;
+        }
+        .text-muted {
+            color: #94a3b8;
+        }
 
         #modalOverlay {
             display: none;
@@ -942,7 +948,7 @@
                 </div>
             </div>
 
-            <!-- INVENTORY (sederhana) -->
+            <!-- INVENTORY -->
             <div class="page" id="page-inventory">
                 <div class="filter-tabs" id="filterTabs">
                     <button class="tab-btn active" data-filter="all"><i class="fas fa-list"></i> Semua</button>
@@ -970,7 +976,7 @@
                 </div>
             </div>
 
-            <!-- PAGE LAINNYA (placeholder) -->
+            <!-- PAGE LAINNYA (placeholder - nanti bisa diisi) -->
             <div class="page" id="page-part-masuk"><div class="page-content"><h3>Part Masuk</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
             <div class="page" id="page-part-keluar"><div class="page-content"><h3>Part Keluar</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
             <div class="page" id="page-stok-opname"><div class="page-content"><h3>Stok Opname</h3><p class="text-muted">Modul ini sedang dalam pengembangan</p></div></div>
@@ -1005,7 +1011,7 @@
                 <span id="aiStatusText">Online</span>
             </span>
             <span style="color:#94a3b8;font-size:11px;">|</span>
-            <span style="color:#94a3b8;font-size:11px;">Model: Gemini 1.5 Flash</span>
+            <span style="color:#94a3b8;font-size:11px;">Model: Llama 3.3 70B</span>
             <span style="color:#94a3b8;font-size:11px;margin-left:auto;">
                 <i class="fas fa-database"></i> <span id="aiDataCount">0</span> data
             </span>
@@ -1197,8 +1203,6 @@
             document.getElementById('welcomeTotal').textContent = total;
             document.getElementById('welcomeAction').textContent = overdue + warning;
             document.getElementById('welcomeSafe').textContent = safe;
-
-            // Update AI data count
             document.getElementById('aiDataCount').textContent = total;
         }
 
@@ -1265,17 +1269,16 @@
             document.getElementById('tableInfo').textContent =
                 `Menampilkan ${filteredData.length > 0 ? start + 1 : 0} - ${Math.min(start + pageSize, filteredData.length)} dari ${filteredData.length} data`;
             document.getElementById('pageIndicator').textContent = currentPage;
-
-            // Update AI data count
             document.getElementById('aiDataCount').textContent = allData.length;
         }
 
         // ============================================================
-        // AI ASSISTANT - GEMINI API
+        // AI ASSISTANT - OPENROUTER (GRATIS, NO 2FA)
         // ============================================================
-        // 🔑 GANTI DENGAN API KEY KAMU
-        const GEMINI_API_KEY = 'AQ.Ab8RN6JZ7aL8q37yjdgv5nrS1KrhVqtz5JKSUuSnUZh2cpkTSg';
-        const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + GEMINI_API_KEY;
+        // 🔑 DAFTAR GRATIS DI https://openrouter.ai
+        // DAPET API KEY FORMAT: sk-or-v1-...
+        const AI_API_KEY = 'sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+        const AI_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
         let aiMessages = [];
         let isAiLoading = false;
@@ -1287,7 +1290,6 @@
             const safe = allData.filter(d => getStatus(d.dueDate) === 'safe').length;
             const woOpen = woData.filter(d => d.status === 'Open').length;
 
-            // Ambil 10 part teratas untuk konteks
             const topParts = allData.slice(0, 10).map(d =>
                 `- ${d.kodePart}: ${d.namaPart} (${d.mesin}, due: ${d.dueDate}, status: ${getStatus(d.dueDate)})`
             ).join('\n');
@@ -1319,7 +1321,6 @@ Aturan:
         }
 
         function getContextData(query) {
-            // Cari part yang relevan dengan query
             const q = query.toLowerCase();
             let relevantParts = allData.filter(d =>
                 d.kodePart.toLowerCase().includes(q) ||
@@ -1339,7 +1340,6 @@ Aturan:
                 });
             }
 
-            // Tambah info WO
             const woOpenList = woData.filter(w => w.status === 'Open');
             if (woOpenList.length > 0) {
                 context += `\nWO OPEN: ${woOpenList.length} WO sedang terbuka.\n`;
@@ -1352,41 +1352,46 @@ Aturan:
         }
 
         async function sendToAI(userMessage) {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_HERE') {
-                return "⚠️ API Key belum diset! Silakan ganti GEMINI_API_KEY di kode dengan API Key dari Google AI Studio (gratis).";
+            if (!AI_API_KEY || AI_API_KEY === 'sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx') {
+                return "⚠️ API Key belum diset! Daftar gratis di https://openrouter.ai";
             }
 
             try {
                 const systemPrompt = getSystemPrompt();
                 const contextData = getContextData(userMessage);
-
                 const fullPrompt = systemPrompt + contextData + `\n\nPERTANYAAN USER: ${userMessage}`;
 
-                const response = await fetch(GEMINI_URL, {
+                const response = await fetch(AI_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AI_API_KEY}`
+                    },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: fullPrompt }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.7,
-                            maxOutputTokens: 500,
-                        }
+                        model: "meta-llama/llama-3.3-70b-instruct:free",
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userMessage + contextData }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
                     })
                 });
 
                 if (!response.ok) {
                     const error = await response.json();
-                    console.error('Gemini API Error:', error);
-                    if (response.status === 403) {
-                        return "⚠️ API Key tidak valid atau kuota habis. Silakan cek API Key di Google AI Studio.";
+                    console.error('AI Error:', error);
+                    if (response.status === 401) {
+                        return "⚠️ API Key tidak valid! Cek di https://openrouter.ai/keys";
+                    }
+                    if (response.status === 429) {
+                        return "⚠️ Rate limit! Tunggu sebentar lalu coba lagi.";
                     }
                     return `⚠️ Error: ${error.error?.message || 'Terjadi kesalahan'}`;
                 }
 
                 const data = await response.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, saya tidak bisa memproses permintaan Anda.';
+                const text = data.choices?.[0]?.message?.content || 'Maaf, saya tidak bisa memproses permintaan Anda.';
 
                 return text;
 
@@ -1401,7 +1406,6 @@ Aturan:
         // ============================================================
         function addMessage(text, sender = 'ai') {
             const container = document.getElementById('aiMessages');
-            // Remove empty state
             const empty = container.querySelector('.empty-chat');
             if (empty) empty.remove();
 
@@ -1414,8 +1418,6 @@ Aturan:
             `;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
-
-            // Simpan history
             aiMessages.push({ sender, text });
         }
 
@@ -1442,28 +1444,19 @@ Aturan:
             const query = input.value.trim();
             if (!query) return;
 
-            // Disable input
             input.disabled = true;
             document.getElementById('aiSendBtn').disabled = true;
 
-            // Add user message
             addMessage(query, 'user');
             input.value = '';
 
-            // Show typing
             addTypingIndicator();
-
-            // Send to AI
             const response = await sendToAI(query);
-
-            // Remove typing
             removeTypingIndicator();
 
-            // Add AI response
             const formattedResponse = response.replace(/\n/g, '<br>');
             addMessage(formattedResponse, 'ai');
 
-            // Enable input
             input.disabled = false;
             document.getElementById('aiSendBtn').disabled = false;
             input.focus();
@@ -1477,7 +1470,6 @@ Aturan:
             window.classList.toggle('open');
             if (window.classList.contains('open')) {
                 document.getElementById('aiInput').focus();
-                // Update status
                 document.getElementById('aiStatusText').textContent = 'Online';
                 document.getElementById('aiStatusDot').className = 'dot online';
             }
@@ -1488,7 +1480,6 @@ Aturan:
         });
 
         document.getElementById('aiSendBtn').addEventListener('click', handleAIQuery);
-
         document.getElementById('aiInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1755,9 +1746,9 @@ Aturan:
         navigateTo('dashboard');
         console.log('🚀 CMMS dengan AI Assistant siap!');
         console.log(`📦 Total part: ${allData.length}`);
-        console.log('🤖 AI Assistant: Gemini 1.5 Flash');
-        if (GEMINI_API_KEY === 'YOUR_GEMINI_API_HERE') {
-            console.warn('⚠️ Ganti GEMINI_API_KEY dengan API Key dari Google AI Studio!');
+        console.log('🤖 AI Assistant: OpenRouter - Llama 3.3 70B');
+        if (AI_API_KEY === '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') {
+            console.warn('⚠️ Ganti AI_API_KEY dengan API Key dari https://openrouter.ai/keys');
         }
     </script>
 
